@@ -87,6 +87,9 @@ const Authority = () => {
             src="/authorityImage.png"
             alt="Happy customers and families"
             className="w-full h-full scale-75 max-sm:scale-200"
+            loading="lazy"
+            onLoad={() => console.log('Authority image loaded')}
+            onError={(e) => console.error('Authority image failed to load:', e)}
           />
         </div>
 
