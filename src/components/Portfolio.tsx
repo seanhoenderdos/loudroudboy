@@ -26,16 +26,18 @@ const Portfolio = () => {
             scale: 1,
           });
           
-          // Optional simple fade-in for mobile
+          // Add subtle scale animation for mobile
           gsap.fromTo(photoCards, 
-            { opacity: 0.3 },
+            { opacity: 0.6, scale: 0.95 },
             { 
-              opacity: 1, 
-              duration: 0.5,
+              opacity: 1,
+              scale: 1,
+              duration: 0.7,
+              ease: 'power2.out',
               stagger: 0.1,
               scrollTrigger: {
                 trigger: sectionRef.current,
-                start: 'top 80%',
+                start: 'top 75%',
                 toggleActions: 'play none none none',
                 id: 'portfolio-mobile',
               }

@@ -110,7 +110,9 @@ body {
   
   /* Ensure content is visible on mobile - fallback */
   .card,
-  .portfolio-card {
+  .portfolio-card,
+  .contact-input,
+  .contact-button {
     opacity: 1 !important;
     transform: none !important;
   }

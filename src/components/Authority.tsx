@@ -26,16 +26,18 @@ const Authority = () => {
           opacity: 1, // Start visible on mobile
         });
 
-        // Optional simple fade-in animation for mobile
-        gsap.fromTo([authorityImageRef.current, badgesRef.current.children], 
-          { opacity: 0.5 },
+        // Add subtle slide-in animation for mobile
+        gsap.fromTo([authorityImageRef.current, ...badgesRef.current.children], 
+          { opacity: 0.4, x: -20 },
           { 
-            opacity: 1, 
+            opacity: 1,
+            x: 0,
             duration: 0.8,
+            ease: 'power2.out',
             stagger: 0.2,
             scrollTrigger: {
               trigger: authorityImageRef.current,
-              start: 'top 80%',
+              start: 'top 75%',
               toggleActions: 'play none none none',
               id: 'authority-mobile',
             }

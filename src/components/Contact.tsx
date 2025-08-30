@@ -12,85 +12,140 @@ const Contact = () => {
   const formRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
     if (sectionRef.current && imageRef.current && formRef.current) {
-      // Set initial states
-      gsap.set(imageRef.current, {
-        opacity: 0,
-        scale: 0.9,
-        y: 60,
-      });
-
       // Get form elements
       const formInputs = formRef.current.querySelectorAll('.contact-input');
       const formButton = formRef.current.querySelector('.contact-button');
 
-      if (formInputs.length > 0) {
-        gsap.set(formInputs, {
-          opacity: 0,
-          y: 40,
-          x: 20,
-        });
-      }
-
-      if (formButton) {
-        gsap.set(formButton, {
-          opacity: 0,
-          y: 30,
-          scale: 0.95,
-        });
-      }
-
-      // 1. Animate image when it comes into view
-      gsap.to(imageRef.current, {
-        opacity: 1,
-        scale: 1,
-        y: 0,
-        duration: 0.8,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: imageRef.current,
-          start: 'top 80%',
-          end: 'bottom 60%',
-          toggleActions: 'play none none reverse',
-          id: 'contact-image',
-        },
-      });
-
-      // 2. Animate each form input individually as they come into view
-      formInputs.forEach((input, index) => {
-        gsap.to(input, {
+      if (isMobile) {
+        // Mobile: Start visible and add simple animations
+        gsap.set(imageRef.current, {
           opacity: 1,
+          scale: 1,
           y: 0,
-          x: 0,
-          duration: 0.6,
+        });
+
+        if (formInputs.length > 0) {
+          gsap.set(formInputs, {
+            opacity: 1,
+            y: 0,
+            x: 0,
+          });
+          
+          // Simple fade-in animation for mobile
+          gsap.fromTo(formInputs, 
+            { opacity: 0.3 },
+            { 
+              opacity: 1, 
+              duration: 0.5,
+              stagger: 0.1,
+              scrollTrigger: {
+                trigger: formRef.current,
+                start: 'top 80%',
+                toggleActions: 'play none none none',
+                id: 'contact-mobile',
+              }
+            }
+          );
+        }
+
+        if (formButton) {
+          gsap.set(formButton, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+          });
+        }
+      } else {
+        // Desktop: Full animations
+        gsap.set(imageRef.current, {
+          opacity: 0,
+          scale: 0.9,
+          y: 60,
+        });
+
+        if (formInputs.length > 0) {
+          gsap.set(formInputs, {
+            opacity: 0,
+            y: 40,
+            x: 20,
+          });
+        }
+
+        if (formButton) {
+          gsap.set(formButton, {
+            opacity: 0,
+            y: 30,
+            scale: 0.95,
+          });
+        }
+
+        // Animate image when it comes into view
+        gsap.to(imageRef.current, {
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          duration: 0.8,
           ease: 'power2.out',
           scrollTrigger: {
-            trigger: input,
-            start: 'top 85%',
+            trigger: imageRef.current,
+            start: 'top 80%',
             end: 'bottom 60%',
             toggleActions: 'play none none reverse',
-            id: `contact-input-${index}`,
+            id: 'contact-image',
           },
         });
-      });
 
-      // 3. Animate button when it comes into view
-      if (formButton) {
-        gsap.to(formButton, {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.6,
-          ease: 'back.out(1.2)',
-          scrollTrigger: {
-            trigger: formButton,
-            start: 'top 85%',
-            end: 'bottom 60%',
-            toggleActions: 'play none none reverse',
-            id: 'contact-button',
-          },
+        // Animate each form input individually
+        formInputs.forEach((input, index) => {
+          gsap.to(input, {
+            opacity: 1,
+            y: 0,
+            x: 0,
+            duration: 0.6,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: input,
+              start: 'top 85%',
+              end: 'bottom 60%',
+              toggleActions: 'play none none reverse',
+              id: `contact-input-${index}`,
+            },
+          });
         });
+
+        // Animate button when it comes into view
+        if (formButton) {
+          gsap.to(formButton, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.6,
+            ease: 'back.out(1.2)',
+            scrollTrigger: {
+              trigger: formButton,
+              start: 'top 85%',
+              end: 'bottom 60%',
+              toggleActions: 'play none none reverse',
+              id: 'contact-button',
+            },
+          });
+        }
       }
+    } else {
+      // Fallback: ensure content is visible if refs not found
+      console.warn('Contact refs not found, ensuring section is visible');
+      setTimeout(() => {
+        if (imageRef.current) {
+          gsap.set(imageRef.current, { opacity: 1, scale: 1, y: 0 });
+        }
+        if (formRef.current) {
+          const inputs = formRef.current.querySelectorAll('.contact-input, .contact-button');
+          gsap.set(inputs, { opacity: 1, y: 0, x: 0, scale: 1 });
+        }
+      }, 100);
     }
 
     return () => {
