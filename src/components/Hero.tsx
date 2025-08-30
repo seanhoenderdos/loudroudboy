@@ -14,8 +14,11 @@ const Hero = () => {
   const buttonRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent,
+      );
+
     if (backLightRef.current && frontLightRef.current) {
       // Simplified animations for mobile
       if (isMobile) {
@@ -23,14 +26,14 @@ const Hero = () => {
         gsap.set([backLightRef.current, frontLightRef.current], {
           opacity: 0,
         });
-        
+
         gsap.to([backLightRef.current, frontLightRef.current], {
           opacity: 0.8,
           duration: 0.8,
           ease: 'power2.out',
           stagger: 0.2,
         });
-        
+
         if (buttonRef.current) {
           gsap.set(buttonRef.current, { opacity: 0 });
           gsap.to(buttonRef.current, {

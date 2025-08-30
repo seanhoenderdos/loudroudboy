@@ -11,12 +11,16 @@ const Portfolio = () => {
   const portfolioBentoRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent,
+      );
+
     if (sectionRef.current && portfolioBentoRef.current) {
       // Get all photo card elements within the portfolio bento
-      const photoCards = portfolioBentoRef.current.querySelectorAll('.portfolio-card');
-      
+      const photoCards =
+        portfolioBentoRef.current.querySelectorAll('.portfolio-card');
+
       if (photoCards.length > 0) {
         if (isMobile) {
           // Simple mobile animation - ensure content is visible
@@ -25,11 +29,12 @@ const Portfolio = () => {
             y: 0,
             scale: 1,
           });
-          
+
           // Add subtle scale animation for mobile
-          gsap.fromTo(photoCards, 
+          gsap.fromTo(
+            photoCards,
             { opacity: 0.6, scale: 0.95 },
-            { 
+            {
               opacity: 1,
               scale: 1,
               duration: 0.7,
@@ -40,8 +45,8 @@ const Portfolio = () => {
                 start: 'top 75%',
                 toggleActions: 'play none none none',
                 id: 'portfolio-mobile',
-              }
-            }
+              },
+            },
           );
         } else {
           // Full desktop animation
@@ -92,10 +97,7 @@ const Portfolio = () => {
   }, []);
 
   return (
-    <section 
-      ref={sectionRef}
-      className="py-16 px-6 max-w-6xl mx-auto"
-    >
+    <section ref={sectionRef} className="py-16 px-6 max-w-6xl mx-auto">
       <Heading
         badge="Portfolio"
         title="A Glimpse into the Loudroudboy Experience"

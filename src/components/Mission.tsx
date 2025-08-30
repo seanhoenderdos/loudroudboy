@@ -11,12 +11,15 @@ const Mission = () => {
   const bentoRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent,
+      );
+
     if (sectionRef.current && bentoRef.current) {
       // Get all card elements within the bento grid
       const cards = bentoRef.current.querySelectorAll('.card');
-      
+
       if (cards.length > 0) {
         if (isMobile) {
           // Simple mobile animation - ensure content is visible
@@ -25,12 +28,13 @@ const Mission = () => {
             y: 0,
             scale: 1,
           });
-          
+
           // Add subtle slide-up animation for mobile
-          gsap.fromTo(cards, 
+          gsap.fromTo(
+            cards,
             { opacity: 0.5, y: 20 },
-            { 
-              opacity: 1, 
+            {
+              opacity: 1,
               y: 0,
               duration: 0.6,
               ease: 'power2.out',
@@ -40,8 +44,8 @@ const Mission = () => {
                 start: 'top 80%',
                 toggleActions: 'play none none none',
                 id: 'mission-mobile',
-              }
-            }
+              },
+            },
           );
         } else {
           // Full desktop animation

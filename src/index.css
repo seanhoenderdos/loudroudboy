@@ -15,15 +15,15 @@ body {
   @media (prefers-color-scheme: dark) {
     color-scheme: dark;
   }
-  
+
   /* Mobile optimizations */
   @media (max-width: 768px) {
     /* Improve touch scrolling on mobile */
     -webkit-overflow-scrolling: touch;
-    
+
     /* Prevent zoom on double tap */
     touch-action: manipulation;
-    
+
     /* Optimize rendering */
     will-change: scroll-position;
   }
@@ -62,7 +62,7 @@ body {
 #benefits {
   .jungle-img {
     @apply w-[60vw] h-[70vh] rounded-2xl overflow-hidden absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2;
-    
+
     /* Mobile optimizations */
     @media (max-width: 768px) {
       will-change: auto; /* Reduce GPU usage on mobile */
@@ -96,18 +96,18 @@ body {
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
   }
-  
+
   /* Optimize scroll performance */
   .scroll-image {
     will-change: transform;
     transform: translateZ(0);
   }
-  
+
   /* Prevent overscroll bounce on iOS */
   body {
     overscroll-behavior: none;
   }
-  
+
   /* Ensure content is visible on mobile - fallback */
   .card,
   .portfolio-card,
@@ -116,7 +116,7 @@ body {
     opacity: 1 !important;
     transform: none !important;
   }
-  
+
   /* Authority section mobile fallback */
   .authority img,
   .authority .badge {

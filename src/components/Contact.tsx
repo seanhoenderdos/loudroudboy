@@ -12,8 +12,11 @@ const Contact = () => {
   const formRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent,
+      );
+
     if (sectionRef.current && imageRef.current && formRef.current) {
       // Get form elements
       const formInputs = formRef.current.querySelectorAll('.contact-input');
@@ -33,12 +36,13 @@ const Contact = () => {
             y: 0,
             x: 0,
           });
-          
+
           // Simple fade-in animation for mobile
-          gsap.fromTo(formInputs, 
+          gsap.fromTo(
+            formInputs,
             { opacity: 0.3 },
-            { 
-              opacity: 1, 
+            {
+              opacity: 1,
               duration: 0.5,
               stagger: 0.1,
               scrollTrigger: {
@@ -46,8 +50,8 @@ const Contact = () => {
                 start: 'top 80%',
                 toggleActions: 'play none none none',
                 id: 'contact-mobile',
-              }
-            }
+              },
+            },
           );
         }
 
@@ -142,7 +146,9 @@ const Contact = () => {
           gsap.set(imageRef.current, { opacity: 1, scale: 1, y: 0 });
         }
         if (formRef.current) {
-          const inputs = formRef.current.querySelectorAll('.contact-input, .contact-button');
+          const inputs = formRef.current.querySelectorAll(
+            '.contact-input, .contact-button',
+          );
           gsap.set(inputs, { opacity: 1, y: 0, x: 0, scale: 1 });
         }
       }, 100);
@@ -150,7 +156,10 @@ const Contact = () => {
 
     return () => {
       ScrollTrigger.getAll().forEach((trigger) => {
-        if (trigger.vars.id && trigger.vars.id.toString().includes('contact-')) {
+        if (
+          trigger.vars.id &&
+          trigger.vars.id.toString().includes('contact-')
+        ) {
           trigger.kill();
         }
       });
@@ -158,7 +167,7 @@ const Contact = () => {
   }, []);
 
   return (
-    <section 
+    <section
       ref={sectionRef}
       className="min-h-screen bg-gray-950 py-20 px-4 sm:px-6 lg:px-8"
     >

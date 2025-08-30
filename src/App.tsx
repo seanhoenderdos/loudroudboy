@@ -36,9 +36,17 @@ function App() {
 
       // Check if mobile/small screen
       const isSmallScreen = window.innerWidth <= 768;
-      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      
-      console.log('Setting up animation, screen width:', window.innerWidth, 'isMobile:', isMobile);
+      const isMobile =
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent,
+        );
+
+      console.log(
+        'Setting up animation, screen width:',
+        window.innerWidth,
+        'isMobile:',
+        isMobile,
+      );
 
       // Set initial state for model (visible on mobile to prevent loading issues)
       gsap.set('.scroll-image', {
@@ -63,7 +71,7 @@ function App() {
       if (isMobile) {
         // Simple CSS-based scroll for mobile - more reliable
         scrollTriggerInstance = gsap.to('.scroll-image', {
-          y: 800, // Reduced distance for mobile
+          y: 1050, // Reduced distance for mobile
           ease: 'none',
           scrollTrigger: {
             trigger: '.hero',
@@ -101,17 +109,25 @@ function App() {
     };
 
     // Immediate setup for mobile, delayed for desktop
-    const setupDelay = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 50 : 100;
+    const setupDelay =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent,
+      )
+        ? 50
+        : 100;
     setTimeout(setupAnimation, setupDelay);
 
     // Handle window resize - debounced and mobile-optimized
     const handleResize = () => {
       if (!isInitialized) return; // Don't resize until initialized
-      
+
       // Debounce resize events - longer delay for mobile
-      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const isMobile =
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent,
+        );
       const debounceDelay = isMobile ? 300 : 150;
-      
+
       clearTimeout((window as any).resizeTimeout);
       (window as any).resizeTimeout = setTimeout(() => {
         console.log('Window resized, recalculating...');

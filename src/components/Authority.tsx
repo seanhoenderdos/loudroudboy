@@ -11,59 +11,74 @@ const Authority = () => {
   const badgesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    
-    if (authorityImageRef.current && badgesRef.current) {
-      if (isMobile) {
-        // Simple mobile version - ensure content is visible
-        gsap.set(authorityImageRef.current, {
-          x: 0,
-          opacity: 1, // Start visible on mobile
-        });
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent,
+      );
 
-        gsap.set(badgesRef.current.children, {
-          x: 0,
-          opacity: 1, // Start visible on mobile
-        });
-
-        // Add subtle slide-in animation for mobile
-        gsap.fromTo([authorityImageRef.current, ...badgesRef.current.children], 
-          { opacity: 0.4, x: -20 },
-          { 
-            opacity: 1,
+    // Add delay to ensure DOM is fully rendered
+    const setupAnimations = () => {
+      if (authorityImageRef.current && badgesRef.current) {
+        if (isMobile) {
+          // Mobile: Start visible but slightly faded
+          gsap.set(authorityImageRef.current, {
             x: 0,
-            duration: 0.8,
-            ease: 'power2.out',
-            stagger: 0.2,
+            opacity: 0.8,
+          });
+
+          gsap.set(badgesRef.current.children, {
+            x: 0,
+            opacity: 0.8,
+          });
+
+          // Simple fade-in animation for mobile
+          gsap.to(authorityImageRef.current, {
+            opacity: 1,
+            duration: 0.6,
             scrollTrigger: {
               trigger: authorityImageRef.current,
-              start: 'top 75%',
+              start: 'top 80%',
               toggleActions: 'play none none none',
-              id: 'authority-mobile',
-            }
-          }
-        );
-      } else {
-        // Full desktop animation
-        gsap.set(authorityImageRef.current, {
-          x: -100,
-          opacity: 0,
-        });
+              id: 'authority-mobile-image',
+              refreshPriority: 1,
+            },
+          });
 
-        gsap.set(badgesRef.current.children, {
-          x: 100,
-          opacity: 0,
-        });
+          gsap.to(badgesRef.current.children, {
+            opacity: 1,
+            duration: 0.6,
+            stagger: 0.15,
+            scrollTrigger: {
+              trigger: badgesRef.current,
+              start: 'top 85%',
+              toggleActions: 'play none none none',
+              id: 'authority-mobile-badges',
+              refreshPriority: 1,
+            },
+          });
+        } else {
+          // Desktop: Animation triggered by model scroll completion
+          gsap.set(authorityImageRef.current, {
+            x: -100,
+            opacity: 0,
+          });
 
-        // Create animation timeline that triggers when model scroll ends
-        const authorityTl = gsap.timeline({
-          scrollTrigger: {
+          gsap.set(badgesRef.current.children, {
+            x: 100,
+            opacity: 0,
+          });
+
+          // Create ScrollTrigger that watches the hero section for model completion
+          ScrollTrigger.create({
             trigger: '.hero',
             start: 'top top',
             end: 'bottom top',
             scrub: false,
+            id: 'authority-desktop-trigger',
             onUpdate: (self) => {
-              if (self.progress >= 0.9 && !authorityTl.isActive()) {
+              // When the hero scroll is about 85-90% complete, trigger Authority animations
+              if (self.progress >= 0.85) {
+                // Animate the authority image
                 gsap.to(authorityImageRef.current, {
                   x: 0,
                   opacity: 1,
@@ -71,34 +86,46 @@ const Authority = () => {
                   ease: 'power2.out',
                 });
 
-                gsap.to(badgesRef.current!.children, {
-                  x: 0,
-                  opacity: 1,
-                  duration: 0.8,
-                  ease: 'power2.out',
-                  stagger: 0.2,
-                });
+                // Animate the badges with stagger
+                if (badgesRef.current) {
+                  gsap.to(badgesRef.current.children, {
+                    x: 0,
+                    opacity: 1,
+                    duration: 0.8,
+                    ease: 'power2.out',
+                    stagger: 0.2,
+                  });
+                }
+
+                // Kill this trigger once animations are complete to prevent re-triggering
+                self.kill();
               }
             },
-          },
-        });
+            refreshPriority: 1,
+          });
+        }
+
+        // Force ScrollTrigger refresh after setup
+        setTimeout(() => {
+          ScrollTrigger.refresh();
+          console.log('Authority ScrollTrigger refreshed');
+        }, 100);
+      } else {
+        console.warn('Authority refs not ready, retrying...');
+        setTimeout(setupAnimations, 50);
       }
-    } else {
-      // Fallback: ensure content is visible if refs not found
-      console.warn('Authority refs not found, ensuring section is visible');
-      setTimeout(() => {
-        if (authorityImageRef.current) {
-          gsap.set(authorityImageRef.current, { opacity: 1, x: 0 });
-        }
-        if (badgesRef.current) {
-          gsap.set(badgesRef.current.children, { opacity: 1, x: 0 });
-        }
-      }, 100);
-    }
+    };
+
+    // Small delay to ensure DOM is ready
+    setTimeout(setupAnimations, 100);
 
     return () => {
       ScrollTrigger.getAll().forEach((trigger) => {
-        if (trigger.vars.id === 'authority-animation') {
+        if (
+          trigger.vars.id &&
+          (trigger.vars.id.toString().includes('authority-') ||
+            trigger.vars.id === 'authority-desktop-trigger')
+        ) {
           trigger.kill();
         }
       });
@@ -128,9 +155,6 @@ const Authority = () => {
             src="/authorityImage.png"
             alt="Happy customers and families"
             className="w-full h-full scale-75 max-sm:scale-200"
-            loading="lazy"
-            onLoad={() => console.log('Authority image loaded')}
-            onError={(e) => console.error('Authority image failed to load:', e)}
           />
         </div>
 

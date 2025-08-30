@@ -34,9 +34,10 @@ const Testimonial = () => {
   useEffect(() => {
     if (sectionRef.current) {
       // Get all testimonial cards and concern cards
-      const testimonialCards = sectionRef.current.querySelectorAll('.testimonial-card');
+      const testimonialCards =
+        sectionRef.current.querySelectorAll('.testimonial-card');
       const concernCards = sectionRef.current.querySelectorAll('.concern-card');
-      
+
       if (testimonialCards.length > 0 && concernCards.length > 0) {
         // Set initial states based on desktop or mobile
         if (isMobile) {
@@ -47,7 +48,7 @@ const Testimonial = () => {
               opacity: 0,
             });
           });
-          
+
           concernCards.forEach((card, index) => {
             gsap.set(card, {
               x: index % 2 === 0 ? -100 : 100, // Even indices from left, odd from right
@@ -63,7 +64,7 @@ const Testimonial = () => {
               opacity: 0,
             });
           });
-          
+
           concernCards.forEach((card, index) => {
             const pairIndex = Math.floor(index / 2);
             gsap.set(card, {
@@ -75,10 +76,12 @@ const Testimonial = () => {
 
         // Create scroll-based animation for each row
         const rows = sectionRef.current.querySelectorAll('.testimonial-row');
-        
+
         rows.forEach((row, rowIndex) => {
-          const rowCards = row.querySelectorAll('.testimonial-card, .concern-card');
-          
+          const rowCards = row.querySelectorAll(
+            '.testimonial-card, .concern-card',
+          );
+
           gsap.to(rowCards, {
             x: 0,
             opacity: 1,
@@ -107,10 +110,7 @@ const Testimonial = () => {
   }, [isMobile]);
 
   return (
-    <section 
-      ref={sectionRef}
-      className="py-16 px-6"
-    >
+    <section ref={sectionRef} className="py-16 px-6">
       <div className="w-full flex flex-col items-center">
         {/* Header */}
         <div className="text-center mb-12">
@@ -123,7 +123,7 @@ const Testimonial = () => {
         </div>
 
         {/* Testimonials Grid - Matching the image layout */}
-        <div className="flex flex-col gap-15 items-center justify-center w-2/3">
+        <div className="flex flex-col gap-15 items-center justify-center w-11/12">
           {/* Row 1: Concern + Testimonial */}
           <div className="testimonial-row grid grid-cols-1 md:grid-cols-2 gap-15 items-center justify-center w-full">
             <Card className="concern-card p-6 flex items-center justify-center h-fit">
