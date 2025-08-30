@@ -71,7 +71,7 @@ function App() {
       if (isMobile) {
         // Simple CSS-based scroll for mobile - more reliable
         scrollTriggerInstance = gsap.to('.scroll-image', {
-          y: 1050, // Reduced distance for mobile
+          y: 1400, // Increased distance for mobile to scroll further down
           ease: 'none',
           scrollTrigger: {
             trigger: '.hero',
