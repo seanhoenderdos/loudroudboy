@@ -11,41 +11,72 @@ const Portfolio = () => {
   const portfolioBentoRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
     if (sectionRef.current && portfolioBentoRef.current) {
       // Get all photo card elements within the portfolio bento
       const photoCards = portfolioBentoRef.current.querySelectorAll('.portfolio-card');
       
       if (photoCards.length > 0) {
-        // Set initial states for all photo cards (hidden and positioned)
-        gsap.set(photoCards, {
-          opacity: 0,
-          y: 80,
-          scale: 0.9,
-        });
+        if (isMobile) {
+          // Simple mobile animation - ensure content is visible
+          gsap.set(photoCards, {
+            opacity: 1, // Start visible on mobile
+            y: 0,
+            scale: 1,
+          });
+          
+          // Optional simple fade-in for mobile
+          gsap.fromTo(photoCards, 
+            { opacity: 0.3 },
+            { 
+              opacity: 1, 
+              duration: 0.5,
+              stagger: 0.1,
+              scrollTrigger: {
+                trigger: sectionRef.current,
+                start: 'top 80%',
+                toggleActions: 'play none none none',
+                id: 'portfolio-mobile',
+              }
+            }
+          );
+        } else {
+          // Full desktop animation
+          gsap.set(photoCards, {
+            opacity: 0,
+            y: 80,
+            scale: 0.9,
+          });
 
-        // Create timeline for portfolio cards animation
-        const portfolioTl = gsap.timeline({
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 70%', // Start animation when section is 70% into view
-            end: 'bottom 30%',
-            toggleActions: 'play none none reverse',
-            id: 'portfolio-animation',
-          },
-        });
+          const portfolioTl = gsap.timeline({
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'top 70%',
+              end: 'bottom 30%',
+              toggleActions: 'play none none reverse',
+              id: 'portfolio-animation',
+            },
+          });
 
-        // Animate all cards with stagger effect
-        portfolioTl.to(photoCards, {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.8,
-          ease: 'power2.out',
-          stagger: {
-            amount: 0.6, // Total time to stagger all cards
-            from: 'start', // Start from first card
-          },
-        });
+          portfolioTl.to(photoCards, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.8,
+            ease: 'power2.out',
+            stagger: {
+              amount: 0.6,
+              from: 'start',
+            },
+          });
+        }
+      } else {
+        // Fallback: ensure content is visible if no cards found
+        console.warn('No portfolio cards found, ensuring section is visible');
+        if (portfolioBentoRef.current) {
+          gsap.set(portfolioBentoRef.current, { opacity: 1 });
+        }
       }
     }
 

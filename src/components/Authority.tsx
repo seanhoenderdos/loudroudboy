@@ -11,48 +11,87 @@ const Authority = () => {
   const badgesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
     if (authorityImageRef.current && badgesRef.current) {
-      // Set initial states (hidden)
-      gsap.set(authorityImageRef.current, {
-        x: -100,
-        opacity: 0,
-      });
+      if (isMobile) {
+        // Simple mobile version - ensure content is visible
+        gsap.set(authorityImageRef.current, {
+          x: 0,
+          opacity: 1, // Start visible on mobile
+        });
 
-      gsap.set(badgesRef.current.children, {
-        x: 100,
-        opacity: 0,
-      });
+        gsap.set(badgesRef.current.children, {
+          x: 0,
+          opacity: 1, // Start visible on mobile
+        });
 
-      // Create animation timeline that triggers when model scroll ends
-      const authorityTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: '.hero',
-          start: 'top top',
-          end: 'bottom top',
-          scrub: false, // No scrub - we want discrete animation
-          onUpdate: (self) => {
-            // Trigger animation when scroll progress is near completion (around 90%)
-            if (self.progress >= 0.9 && !authorityTl.isActive()) {
-              // Authority image slides in from left
-              gsap.to(authorityImageRef.current, {
-                x: 0,
-                opacity: 1,
-                duration: 0.8,
-                ease: 'power2.out',
-              });
-
-              // Badges slide in from right with stagger
-              gsap.to(badgesRef.current!.children, {
-                x: 0,
-                opacity: 1,
-                duration: 0.8,
-                ease: 'power2.out',
-                stagger: 0.2, // 0.2s delay between each badge
-              });
+        // Optional simple fade-in animation for mobile
+        gsap.fromTo([authorityImageRef.current, badgesRef.current.children], 
+          { opacity: 0.5 },
+          { 
+            opacity: 1, 
+            duration: 0.8,
+            stagger: 0.2,
+            scrollTrigger: {
+              trigger: authorityImageRef.current,
+              start: 'top 80%',
+              toggleActions: 'play none none none',
+              id: 'authority-mobile',
             }
+          }
+        );
+      } else {
+        // Full desktop animation
+        gsap.set(authorityImageRef.current, {
+          x: -100,
+          opacity: 0,
+        });
+
+        gsap.set(badgesRef.current.children, {
+          x: 100,
+          opacity: 0,
+        });
+
+        // Create animation timeline that triggers when model scroll ends
+        const authorityTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: '.hero',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: false,
+            onUpdate: (self) => {
+              if (self.progress >= 0.9 && !authorityTl.isActive()) {
+                gsap.to(authorityImageRef.current, {
+                  x: 0,
+                  opacity: 1,
+                  duration: 0.8,
+                  ease: 'power2.out',
+                });
+
+                gsap.to(badgesRef.current!.children, {
+                  x: 0,
+                  opacity: 1,
+                  duration: 0.8,
+                  ease: 'power2.out',
+                  stagger: 0.2,
+                });
+              }
+            },
           },
-        },
-      });
+        });
+      }
+    } else {
+      // Fallback: ensure content is visible if refs not found
+      console.warn('Authority refs not found, ensuring section is visible');
+      setTimeout(() => {
+        if (authorityImageRef.current) {
+          gsap.set(authorityImageRef.current, { opacity: 1, x: 0 });
+        }
+        if (badgesRef.current) {
+          gsap.set(badgesRef.current.children, { opacity: 1, x: 0 });
+        }
+      }, 100);
     }
 
     return () => {

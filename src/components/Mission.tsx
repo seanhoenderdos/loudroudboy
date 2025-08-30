@@ -11,41 +11,72 @@ const Mission = () => {
   const bentoRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
     if (sectionRef.current && bentoRef.current) {
       // Get all card elements within the bento grid
       const cards = bentoRef.current.querySelectorAll('.card');
       
       if (cards.length > 0) {
-        // Set initial states for all cards (hidden and positioned)
-        gsap.set(cards, {
-          opacity: 0,
-          y: 80,
-          scale: 0.9,
-        });
+        if (isMobile) {
+          // Simple mobile animation - ensure content is visible
+          gsap.set(cards, {
+            opacity: 1, // Start visible on mobile
+            y: 0,
+            scale: 1,
+          });
+          
+          // Optional simple fade-in for mobile
+          gsap.fromTo(cards, 
+            { opacity: 0.3 },
+            { 
+              opacity: 1, 
+              duration: 0.5,
+              stagger: 0.1,
+              scrollTrigger: {
+                trigger: sectionRef.current,
+                start: 'top 80%',
+                toggleActions: 'play none none none',
+                id: 'mission-mobile',
+              }
+            }
+          );
+        } else {
+          // Full desktop animation
+          gsap.set(cards, {
+            opacity: 0,
+            y: 80,
+            scale: 0.9,
+          });
 
-        // Create timeline for mission cards animation (same as portfolio)
-        const missionTl = gsap.timeline({
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 70%', // Start animation when section is 70% into view
-            end: 'bottom 30%',
-            toggleActions: 'play none none reverse',
-            id: 'mission-animation',
-          },
-        });
+          const missionTl = gsap.timeline({
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'top 70%',
+              end: 'bottom 30%',
+              toggleActions: 'play none none reverse',
+              id: 'mission-animation',
+            },
+          });
 
-        // Animate all cards with stagger effect (same as portfolio)
-        missionTl.to(cards, {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.8,
-          ease: 'power2.out',
-          stagger: {
-            amount: 0.6, // Total time to stagger all cards
-            from: 'start', // Start from first card
-          },
-        });
+          missionTl.to(cards, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.8,
+            ease: 'power2.out',
+            stagger: {
+              amount: 0.6,
+              from: 'start',
+            },
+          });
+        }
+      } else {
+        // Fallback: ensure content is visible if no cards found
+        console.warn('No mission cards found, ensuring section is visible');
+        if (bentoRef.current) {
+          gsap.set(bentoRef.current, { opacity: 1 });
+        }
       }
     }
 

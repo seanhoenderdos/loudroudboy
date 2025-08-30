@@ -5,6 +5,7 @@ interface CardProps {
   className?: string;
   image?: string;
   imageAlt?: string;
+  onImageError?: () => void;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -12,6 +13,7 @@ const Card: React.FC<CardProps> = ({
   className = '',
   image,
   imageAlt = '',
+  onImageError,
 }) => {
   return (
     <div className={`card rounded-2xl border border-slate-700 ${className}`}>
@@ -21,6 +23,12 @@ const Card: React.FC<CardProps> = ({
             src={image}
             alt={imageAlt}
             className="w-full h-70 object-cover"
+            loading="lazy"
+            onLoad={() => console.log(`Card image loaded: ${image}`)}
+            onError={(e) => {
+              console.error(`Failed to load card image: ${image}`, e);
+              if (onImageError) onImageError();
+            }}
           />
         </div>
       )}

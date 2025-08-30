@@ -107,4 +107,18 @@ body {
   body {
     overscroll-behavior: none;
   }
+  
+  /* Ensure content is visible on mobile - fallback */
+  .card,
+  .portfolio-card {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  
+  /* Authority section mobile fallback */
+  .authority img,
+  .authority .badge {
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+  }
 }

@@ -7,6 +7,10 @@ const ImagePreloader: React.FC = () => {
       '/model.png',
       '/hero-bg.png',
       '/light-back.png',
+      '/light-front.png',
+      '/awkward.jpg',
+      '/authorityImage.png',
+      '/wedding.jpg', // First portfolio image
     ];
 
     const preloadImage = (src: string) => {

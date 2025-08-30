@@ -9,6 +9,7 @@ const Bento: React.FC = () => {
         className="lg:col-span-3 object-cover"
         image="/awkward.jpg"
         imageAlt="Person looking awkward"
+        onImageError={() => console.error('Failed to load awkward.jpg')}
       />
 
       {/* Bottom Left Card - Stress about photoshoots */}
