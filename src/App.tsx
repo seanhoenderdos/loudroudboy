@@ -1,25 +1,17 @@
-import Hero from '~/components/Hero';
-import type { Route } from './+types/home';
-import Authority from '~/components/Authority';
-import Mission from '~/components/Mission';
 import React, { useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import Benefits from '~/components/Benefits';
-import Portfolio from '~/components/Portfolio';
-import Testimonial from '~/components/Testimonial';
-import Contact from '~/components/Contact';
+import Hero from './components/Hero';
+import Authority from './components/Authority';
+import Mission from './components/Mission';
+import Benefits from './components/Benefits';
+import Portfolio from './components/Portfolio';
+import Testimonial from './components/Testimonial';
+import Contact from './components/Contact';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export function meta({}: Route.MetaArgs) {
-  return [
-    { title: 'LoudRoudBoy Photography' },
-    { name: 'description', content: 'Welcome to LoudRoudBoy Photography!' },
-  ];
-}
-
-export default function Home() {
+function App() {
   useEffect(() => {
     let scrollTriggerInstance: any = null;
 
@@ -139,3 +131,5 @@ export default function Home() {
     </div>
   );
 }
+
+export default App;
